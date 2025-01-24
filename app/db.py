@@ -3,7 +3,7 @@ import sqlite3
 
 class DBService:
     def __init__(self):
-        self.connection = sqlite3.connect('data.db', check_same_thread=False)
+        self.connection = sqlite3.connect('data/data.db', check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
 
