@@ -64,8 +64,18 @@ class MailService:
             attachment=[]
         )
 
+    def renew_box(self):
+        try:
+            self.imap.select("INBOX", readonly=True)
+        except self.imap.abort:
+            self.imap = imaplib.IMAP4_SSL(self.MAIL_IMAP_SERVER)
+            status, _ = self.imap.login(self.MAIL_USERNAME, self.MAIL_PASSWORD)
+            assert status == 'OK', "IMAP Login failed"
+            self.renew_box()
+
     def get_new_mails(self) -> list[Mail]:
-        self.imap.select("INBOX", readonly=True)
+        self.renew_box()
+
         if self._last_mail_uid == -1:
             _, uids = self.imap.uid('search', 'UNSEEN', 'ALL')
             uids = uids[0].split(b' ')
