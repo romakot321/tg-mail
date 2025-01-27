@@ -65,7 +65,7 @@ class MailService:
         )
 
     def get_new_mails(self) -> list[Mail]:
-        self.imap.select("INBOX")
+        self.imap.select("INBOX", readonly=True)
         if self._last_mail_uid == -1:
             _, uids = self.imap.uid('search', 'UNSEEN', 'ALL')
             uids = uids[0].split(b' ')
