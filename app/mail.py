@@ -75,6 +75,7 @@ class MailService:
 
     def get_new_mails(self) -> list[Mail]:
         self.renew_box()
+        mail = None
 
         if self._last_mail_uid == -1:
             _, uids = self.imap.uid('search', 'UNSEEN', 'ALL')
@@ -83,6 +84,7 @@ class MailService:
             self._set_uid_tip(self._last_mail_uid)
         else:
             _, uids = self.imap.uid('search', 'UNSEEN', 'UID ' + str(self._last_mail_uid) + ':*')
+            uids = uids[0].split()
 
         if not uids or not uids[0]:
             print("No new messages")
@@ -96,14 +98,15 @@ class MailService:
                 break
 
         for uid in uids[left_index:]:
-            if uid < self._last_mail_uid:
+            if uid <= self._last_mail_uid:
                 continue
             res, msg = self.imap.uid('fetch', str(uid), '(RFC822)')
             msg = email.message_from_bytes(msg[0][1])
             mail = self._parse_mail(msg)
         self._set_uid_tip(uids[-1])
+        self._last_mail_uid = uids[-1]
 
-        return [mail]
+        return [mail] if mail is not None else []
 
 
 if __name__ == '__main__':

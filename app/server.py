@@ -24,10 +24,10 @@ class ServerWorker:
         @self.application.route('/mail/<mail_id>')
         def handle_mail_show(mail_id: int):
             mail = self.db_service.get_mail(mail_id)
-            html = mail.get("html", "").encode()
+            html = mail.get("html")
             if not html:
-                html = f'<p style="font-size: 1rem;">{html.get("text", "Письмо не содержит текст")}</p>'
-            return send_file(io.BytesIO(html), mimetype='text/html')
+                html = f'<p style="font-size: 1rem;">Письмо не содержит текст</p>'
+            return send_file(io.BytesIO(html.encode()), mimetype='text/html')
 
     def send_mails(self, mails):
         for mail in mails:
