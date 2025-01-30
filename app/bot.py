@@ -20,6 +20,22 @@ class Mail:
     html: str | None = None
 
 
+_sender_to_app = {
+    "klinknerramaya929569@gmail.com": "028 SeaArt AI",
+    "hadolmanis436@gmail.com": "039 music ai",
+    "auroritaquint@gmail.com": "032 Pika + txt2video",
+    "carlitacipriani253@gmail.com": "046 Video ai",
+    "nhflatjscuba25687@gmail.com": "035 Ai video generator",
+    "bpuzjb442bpuzjbl@gmail.com": "029 pika + pixverse",
+    "sofia8234307@gmail.com": "034 PixVerse",
+    "brianlppopichak1842@gmail.com": "026 PixVerse",
+    "waddupsnordmark@gmail.com": "1176 Sora&Hug: AI Video Generator",
+    "erbolatttsaliev12@yandex.kz": "031 PixVerse",
+    "ismalekberr443@outlook.com": "019 Pika app",
+    "mcbayroxane@gmail.com": "017 Pika art"
+}
+
+
 class BotWorker:
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", "123")
@@ -58,9 +74,11 @@ class BotWorker:
         return keyboard
 
     def _process_mail(self, mail: Mail):
+        app = _sender_to_app.get(mail.sender, "Неизвестно")
         text = f"""
             Пришло новое письмо:
             Отправитель: {mail.sender}
+            Приложение: {app}
             Тема: {mail.subject}
             Время: {mail.date}
             Текст: {mail.text}
